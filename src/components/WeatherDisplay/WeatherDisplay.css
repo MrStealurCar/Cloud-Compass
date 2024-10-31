@@ -1,0 +1,13 @@
+.weather-display {
+  padding: 50px;
+  width: 25%;
+  border: 1px solid black;
+}
+
+.loading-message {
+  font-size: 25px;
+}
+
+.location {
+  font-size: 50px;
+}
