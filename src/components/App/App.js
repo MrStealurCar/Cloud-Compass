@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import SearchBar from "../SearchBar/SearchBar";
+import WeatherDisplay from "../WeatherDisplay/WeatherDisplay";
 function App() {
   const [location, setLocation] = useState("Orlando");
   const [weatherData, setWeatherData] = useState(null);
@@ -25,7 +26,7 @@ function App() {
         );
         const forecastData = await forecastResponse.json();
         setForecastData(forecastData);
-        setForecastData(forecastData.list.slice(0, 3)); // shows next 3 days forecast
+        setForecastData(forecastData.list.slice(0, 3)); // shows forecast for next 3 days
       } catch (error) {
         console.error(`Error fetching weather data: ${error}`);
       }
@@ -47,6 +48,13 @@ function App() {
             query={query}
             setQuery={setQuery}
             handleSearch={handleSearch}
+          />
+        </div>
+        <div className="weather-container">
+          <WeatherDisplay
+            location={location}
+            weatherData={weatherData}
+            forecastData={forecastData}
           />
         </div>
       </body>
