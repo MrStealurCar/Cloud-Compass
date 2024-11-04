@@ -7,28 +7,39 @@ function App() {
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
   const [query, setQuery] = useState("");
-
+  const [error, setError] = useState("");
   useEffect(() => {
     if (!location) return;
     const fetchWeatherData = async () => {
       const API_KEY = process.env.REACT_APP_API_KEY;
+      setError("");
       try {
         // fetch request for current weather
         const response = await fetch(
           `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}&units=metric`
         );
         const data = await response.json();
-        setWeatherData(data);
+        if (data.cod === "404") {
+          setError("City not found, please enter a different city");
+          setWeatherData(null);
+          return;
+        } else {
+          setWeatherData(data);
+        }
 
         // fetch request for forecast data
         const forecastResponse = await fetch(
           `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${API_KEY}&units=metric`
         );
         const forecastData = await forecastResponse.json();
+        if (forecastData.cod === "404") {
+          throw new Error("Forecast data not available for this city");
+        }
         setForecastData(forecastData);
         setForecastData(forecastData.list.slice(0, 3)); // shows forecast for next 3 days
       } catch (error) {
         console.error(`Error fetching weather data: ${error}`);
+        setError("Error fetching weather data.");
       }
     };
 
@@ -42,7 +53,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header"></header>
-      <body>
+      <main>
         <div className="search">
           <SearchBar
             query={query}
@@ -50,6 +61,7 @@ function App() {
             handleSearch={handleSearch}
           />
         </div>
+        {error && <p className="error-message">{error}</p>}
         <div className="weather-container">
           <WeatherDisplay
             location={location}
@@ -57,7 +69,7 @@ function App() {
             forecastData={forecastData}
           />
         </div>
-      </body>
+      </main>
     </div>
   );
 }
