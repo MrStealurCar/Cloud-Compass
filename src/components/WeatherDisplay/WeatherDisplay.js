@@ -1,11 +1,10 @@
 import React from "react";
 import "./WeatherDisplay.css";
-function WeatherDisplay({ weatherData, forecastData, location }) {
-  if (!weatherData)
-    return <p className="loading-message">Loading weather data...</p>;
+function WeatherDisplay({ weatherData, location }) {
+  if (!weatherData) return;
   const description = weatherData.weather[0].description;
   const icon = weatherData.weather[0].icon;
-  const temperature = Math.round((weatherData.main.temp * 9) / 5 + 32); // converts temp to Fahrenheit because AMERICA RAHHH
+  const temperature = Math.round(weatherData.main.temp);
 
   return (
     <div className="weather-display">
@@ -16,7 +15,9 @@ function WeatherDisplay({ weatherData, forecastData, location }) {
       />
       <div>
         <h2>{temperature}°F</h2>
-        <p>{description}</p>
+        <p className="description">
+          {description.charAt(0).toUpperCase() + description.slice(1)}
+        </p>
       </div>
     </div>
   );
