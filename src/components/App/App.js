@@ -10,16 +10,21 @@ function App() {
   const [forecastData, setForecastData] = useState([]);
   const [query, setQuery] = useState("");
   const [error, setError] = useState("");
-
+  const [coordinates, setCoordinates] = useState({
+    lat: 28.5383,
+    lon: -81.3792,
+  });
   useEffect(() => {
     if (!location) return;
     const fetchWeatherData = async () => {
       const API_KEY = process.env.REACT_APP_API_KEY;
       setError("");
+      const { lat, lon } = coordinates;
+
       try {
         // Fetch request for current weather
         const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}&units=imperial`
+          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=imperial`
         );
         const data = await response.json();
         if (data.cod === "404") {
@@ -32,7 +37,7 @@ function App() {
 
         // Fetch request for forecast data
         const forecastResponse = await fetch(
-          `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${API_KEY}&units=imperial`
+          `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=imperial`
         );
         const forecastData = await forecastResponse.json();
         console.log(forecastData);
@@ -50,6 +55,29 @@ function App() {
     };
 
     fetchWeatherData();
+  }, [location, coordinates]);
+
+  useEffect(() => {
+    const fetchCoordinates = async () => {
+      const API_KEY = process.env.REACT_APP_API_KEY;
+      console.log();
+      try {
+        const response = await fetch(
+          `http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${API_KEY}`
+        );
+        const data = await response.json();
+        if (data.length > 0) {
+          // Update coordinates state with the result
+          setCoordinates({ lat: data[0].lat, lon: data[0].lon });
+        } else {
+          setError("City not found, please enter a different city");
+        }
+      } catch (error) {
+        console.error("Error fetching coordinates:", error);
+        setError("Error retrieving location data.");
+      }
+    };
+    fetchCoordinates();
   }, [location]);
 
   const filterForecastData = (forecastList) => {
