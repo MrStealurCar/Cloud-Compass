@@ -1,0 +1,25 @@
+.info {
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: skyblue;
+  text-align: center;
+  padding: 5px;
+}
+.weather-info {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  gap: 10px;
+  width: 40%;
+}
+
+@media screen and (max-width: 500px) {
+  .weather-info {
+    gap: 10px;
+  }
+}
+@media screen and (max-width: 400px) {
+  .weather-info {
+    flex-direction: column;
+  }
+}
