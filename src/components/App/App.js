@@ -22,7 +22,8 @@ function App() {
     const fetchWeather = async () => {
       const API_KEY = process.env.REACT_APP_API_KEY;
       setError("");
-
+      setWeatherData(null);
+      setForecastData([]);
       try {
         // Fetch coordinates
         const coordResponse = await fetch(
@@ -32,6 +33,7 @@ function App() {
 
         if (coordData.length === 0) {
           setError("City not found, please enter a different city");
+          setWeatherData(null);
           return;
         }
 
@@ -57,22 +59,18 @@ function App() {
         );
         const forecastData = await forecastResponse.json();
 
-        if (forecastData.cod === "404") {
-          throw new Error("Forecast data not available for this city");
-        }
-
         const filteredForecast = filterForecastData(forecastData.list);
         setForecastData(filteredForecast);
       } catch (error) {
         console.error("Error fetching weather data:", error);
         setError("Error retrieving weather data.");
+        setWeatherData(null);
+        setForecastData([]);
       }
     };
 
     fetchWeather();
   }, [location]);
-
-  // useEffect(() => {}, [location]);
 
   const fetchCitySuggestions = async (input) => {
     const API_KEY = process.env.REACT_APP_API_KEY;
@@ -128,10 +126,6 @@ function App() {
     setQuery("");
     setShowSuggestions(false);
   };
-
-  // const handleSearch = () => {
-  //   setLocation(query);
-  // };
 
   return (
     <div className="App">
