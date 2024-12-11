@@ -1,7 +1,10 @@
 .weather-display {
-  padding: 50px;
+  padding: 25px;
   width: 25%;
   border: 1px solid black;
+  background-color: skyblue;
+  border-radius: 10px;
+  margin-top: 25px;
 }
 
 .loading-message {
@@ -10,4 +13,32 @@
 
 .location {
   font-size: 50px;
+}
+
+.description {
+  font-size: 20px;
+}
+
+@media screen and (max-width: 1070px) {
+  .location {
+    font-size: 40px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .location {
+    font-size: 30px;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .location {
+    font-size: 25px;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .weather-display {
+    width: 30%;
+  }
 }
