@@ -1,6 +1,6 @@
 import React from "react";
 import "./SearchBar.css";
-function SearchBar({ query, setQuery, handleSearch }) {
+function SearchBar({ query, handleInputChange, handleSearch }) {
   return (
     <div className="search-container">
       <input
@@ -8,7 +8,7 @@ function SearchBar({ query, setQuery, handleSearch }) {
         placeholder="Enter a city"
         className="search-bar"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={handleInputChange}
       />
       <button className="search-button" onClick={handleSearch}>
         Search
