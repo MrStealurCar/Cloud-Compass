@@ -1,70 +1,40 @@
-# Getting Started with Create React App
+# Cloud Compass
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Cloud Compass is a weather app that allows users to view a city's current weather and temperature, as well as view that city's 3-day weather forecast.
 
-## Available Scripts
+## Description
 
-In the project directory, you can run:
+This app was built using React and Node.js and uses Openweather's Current Weather Data, and 5 day / 3 hour forecast APIs to retrieve the weather data.
+While building the app, I faced many challenges such as managing state in React, handling cities with identical names in different countries, and ensuring accurate forecast data. Although some concepts remain challenging and I feel there's still more to learn, this project helped me better understand how to read and use APIs.
+This app allows users to:
 
-### `npm start`
+- View the current weather and temperature for a default city when first loading the app.
+- Search for cities using the search bar.
+- View the current weather and temperature for a selected city, along with that city’s 3-day forecast.
+- Select suggested cities from the dropdown menu when typing a city name.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Why I built this
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+This was a project that was part of the Front End Engineer career path on Codecademy. It was the final project I completed in the career path in order for me to earn my certificate of completion.
 
-### `npm test`
+## Getting started locally
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Clone the repository.
+2. Make sure you have Node installed.
+3. Navigate to project directory and run `npm install`.
+4. Set up an Openweather API key:
 
-### `npm run build`
+- Create a .env file in the root directory.
+- Add the following line to the .env file:
+  `REACT_APP_API_KEY=your_api_key_here`
+- Replace `your_api_key_here` with your actual Openweather API key.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+5. Run `npm start` to start the development server.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Deployed at
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This app was deployed using Netlify at: `Insert link here`
 
-### `npm run eject`
+## Contributors
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Jacob Rodriguez
