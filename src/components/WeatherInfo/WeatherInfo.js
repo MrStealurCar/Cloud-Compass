@@ -2,10 +2,7 @@ import React from "react";
 import "./WeatherInfo.css";
 
 function WeatherInfo({ forecastData }) {
-  console.log(forecastData);
-  if (!forecastData || forecastData.length === 0) {
-    return <div>No forecast data available.</div>;
-  }
+  if (!forecastData || forecastData.length === 0) return;
 
   return (
     <div className="weather-info">
