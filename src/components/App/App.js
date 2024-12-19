@@ -18,37 +18,27 @@ function App() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   useEffect(() => {
     if (!location) return;
+    const { lat, lon } = coordinates;
 
     const fetchWeather = async () => {
       const API_KEY = process.env.REACT_APP_API_KEY;
       setError("");
       setWeatherData(null);
       setForecastData([]);
+
       try {
-        // Fetch coordinates
-        const coordResponse = await fetch(
-          `http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=5&appid=${API_KEY}`
-        );
-        const coordData = await coordResponse.json();
-
-        if (coordData.length === 0) {
-          setError("City not found, please enter a different city");
-          setWeatherData(null);
-          return;
-        }
-
-        const { lat, lon } = coordData[0];
-        setCoordinates({ lat, lon });
-
         // Fetch current weather
         const weatherResponse = await fetch(
           `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=imperial`
         );
         const weatherData = await weatherResponse.json();
-
-        if (weatherData.cod === "404") {
+        console.log(weatherData);
+        console.log(weatherData.cod);
+        console.log(typeof weatherData.cod);
+        if (weatherData.cod === 404) {
           setError("City not found, please enter a different city");
           setWeatherData(null);
+          setForecastData([]);
           return;
         }
         setWeatherData(weatherData);
@@ -68,28 +58,8 @@ function App() {
         setForecastData([]);
       }
     };
-
     fetchWeather();
-  }, [location]);
-
-  const fetchCitySuggestions = async (input) => {
-    const API_KEY = process.env.REACT_APP_API_KEY;
-    if (input.length >= 3) {
-      try {
-        const response = await fetch(
-          `https://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=${API_KEY}`
-        );
-        const data = await response.json();
-        setSuggestedCity(data);
-        setShowSuggestions(true);
-      } catch (error) {
-        console.error("Error fetching city suggestions:", error);
-      }
-    } else {
-      setSuggestedCity([]);
-      setShowSuggestions(false);
-    }
-  };
+  }, [location, coordinates]);
 
   const filterForecastData = (forecastList) => {
     const dailyTemps = {};
@@ -114,16 +84,38 @@ function App() {
     return nextThreeDays;
   };
 
-  let handleInputChange = (e) => {
+  const handleInputChange = async (e) => {
     const input = e.target.value;
     setQuery(input);
-    fetchCitySuggestions(input);
+
+    if (input.length >= 3) {
+      try {
+        const API_KEY = process.env.REACT_APP_API_KEY;
+        const response = await fetch(
+          `http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=${API_KEY}`
+        );
+        const data = await response.json();
+
+        if (data.length > 0) {
+          setSuggestedCity(data);
+          setShowSuggestions(true);
+        } else {
+          setSuggestedCity([]);
+          setShowSuggestions(false);
+        }
+      } catch (error) {
+        console.error("Error fetching city suggestions:", error);
+      }
+    } else {
+      setSuggestedCity([]);
+      setShowSuggestions(false);
+    }
   };
 
   const handleCitySelect = (city) => {
-    setLocation(`${city.name}, ${city.country}`);
+    setQuery(`${city.name}, ${city.country}`);
     setCoordinates({ lat: city.lat, lon: city.lon });
-    setQuery("");
+    setLocation(city.name);
     setShowSuggestions(false);
   };
 
@@ -133,13 +125,14 @@ function App() {
       <main>
         <div className="search">
           <SearchBar
-            onChange={fetchCitySuggestions}
             query={query}
-            setQuery={setQuery}
-            handleSearch={() => {
-              setLocation(query);
-              handleInputChange = { handleInputChange };
-            }}
+            handleInputChange={handleInputChange}
+            handleSearch={() => setLocation(query)}
+          />
+          <SearchResults
+            suggestions={suggestedCity}
+            onCitySelect={handleCitySelect}
+            visible={showSuggestions}
           />
         </div>
         {error && <p className="error-message">{error}</p>}
@@ -148,14 +141,6 @@ function App() {
         </div>
         <div className="forecast-container">
           <WeatherInfo forecastData={forecastData} />
-        </div>
-
-        <div>
-          <SearchResults
-            suggestions={suggestedCity}
-            onCitySelect={handleCitySelect}
-            visible={showSuggestions}
-          />
         </div>
       </main>
     </div>
