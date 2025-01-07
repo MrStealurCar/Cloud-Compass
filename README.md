@@ -33,7 +33,7 @@ This was a project that was part of the Front End Engineer career path on Codeca
 
 ## Deployed at
 
-This app was deployed using Netlify at: `Insert link here`
+This app was deployed using Netlify at: `https://cloud-compass.netlify.app`
 
 ## Contributors
 

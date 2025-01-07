@@ -22,9 +22,8 @@ function App() {
 
     const fetchWeather = async () => {
       const API_KEY = process.env.REACT_APP_API_KEY;
+      console.log(API_KEY);
       setError("");
-      setWeatherData(null);
-      setForecastData([]);
 
       try {
         // Fetch current weather
@@ -92,7 +91,7 @@ function App() {
       try {
         const API_KEY = process.env.REACT_APP_API_KEY;
         const response = await fetch(
-          `http://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=${API_KEY}`
+          `https://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=${API_KEY}`
         );
         const data = await response.json();
 
