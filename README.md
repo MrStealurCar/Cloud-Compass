@@ -24,6 +24,8 @@ This was a project that was part of the Front End Engineer career path on Codeca
 3. Navigate to project directory and run `npm install`.
 4. Set up an Openweather API key:
 
+- Go to https://openweathermap.org/ and create an account or sign in.
+- Click on `API keys` or `My API keys` and generate an API key.
 - Create a .env file in the root directory.
 - Add the following line to the .env file:
   `REACT_APP_API_KEY=your_api_key_here`
