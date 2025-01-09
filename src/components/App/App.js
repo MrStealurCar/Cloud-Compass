@@ -16,6 +16,37 @@ function App() {
   });
   const [suggestedCity, setSuggestedCity] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+
+  useEffect(() => {
+    if (!location) return;
+
+    const fetchCoordinates = async () => {
+      const API_KEY = process.env.REACT_APP_API_KEY;
+      try {
+        const coordinateResponse = await fetch(
+          `https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${API_KEY}`
+        );
+        const coordinateData = await coordinateResponse.json();
+        if (coordinateData.length > 0) {
+          const { lat, lon } = coordinateData[0];
+          setCoordinates({ lat, lon }); // Set the coordinates
+          setShowSuggestions(false);
+        } else {
+          setError("City not found, please enter a different city");
+          setWeatherData(null);
+          setForecastData([]);
+        }
+      } catch (error) {
+        console.error("Error fetching coordinates:", error);
+        setError("Error retrieving location data.");
+        setWeatherData(null);
+        setForecastData([]);
+      }
+    };
+
+    fetchCoordinates();
+  }, [location]);
+
   useEffect(() => {
     if (!location) return;
     const { lat, lon } = coordinates;
@@ -30,9 +61,6 @@ function App() {
           `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=imperial`
         );
         const weatherData = await weatherResponse.json();
-        console.log(weatherData);
-        console.log(weatherData.cod);
-        console.log(typeof weatherData.cod);
         if (weatherData.cod === 404) {
           setError("City not found, please enter a different city");
           setWeatherData(null);
@@ -89,10 +117,10 @@ function App() {
     if (input.length >= 3) {
       try {
         const API_KEY = process.env.REACT_APP_API_KEY;
-        const response = await fetch(
+        const suggestionResponse = await fetch(
           `https://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=${API_KEY}`
         );
-        const data = await response.json();
+        const data = await suggestionResponse.json();
 
         if (data.length > 0) {
           setSuggestedCity(data);
