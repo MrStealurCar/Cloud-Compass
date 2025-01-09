@@ -5,7 +5,7 @@ Cloud Compass is a weather app that allows users to view a city's current weathe
 ## Description
 
 This app was built using React and Node.js and uses Openweather's Current Weather Data, and 5 day / 3 hour forecast APIs to retrieve the weather data.
-While building the app, I faced many challenges such as managing state in React, handling cities with identical names in different countries, and ensuring accurate forecast data. Although some concepts remain challenging and I feel there's still more to learn, this project helped me better understand how to read and use APIs.
+While building the app, I faced many challenges such as managing and updating state in React, handling cities with identical names in different countries, and ensuring accurate forecast data. Although some concepts remain challenging and I feel there's still more to learn, this project helped me better understand how to read and use APIs.
 This app allows users to:
 
 - View the current weather and temperature for a default city when first loading the app.
