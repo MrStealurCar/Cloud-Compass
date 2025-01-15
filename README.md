@@ -25,13 +25,16 @@ This was a project that was part of the Front End Engineer career path on Codeca
 4. Set up an Openweather API key:
 
 - Go to https://openweathermap.org/ and create an account or sign in.
-- Click on `API keys` or `My API keys` and generate an API key.
+- Click on `API keys` or `My API keys` and generate a key.
 - Create a .env file in the root directory.
 - Add the following line to the .env file:
-  `REACT_APP_API_KEY=your_api_key_here`
-- Replace `your_api_key_here` with your actual Openweather API key.
+  `REACT_APP_API_KEY=your_api_key_here`, replacing `your_api_key_here` with your actual Openweather API key.
 
 5. Run `npm start` to start the development server.
+
+## Important note when searching cities
+
+When using the search bar, please specify the country code (e.g., "Orlando, US") to ensure you receive accurate data. Some cities may share the same name across different countries, and including the country code helps avoid confusion and provides the correct weather information.
 
 ## Deployed at
 
