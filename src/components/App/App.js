@@ -34,7 +34,7 @@ function App() {
   const handleCitySelect = (city) => {
     setQuery(`${city.name}, ${city.country}`);
     setCoordinates({ lat: city.lat, lon: city.lon });
-    setLocation(city.name);
+    setLocation(`${city.name}, ${city.country}`);
     setShowSuggestions(false);
   };
   const handleInputChange = async (e) => {
