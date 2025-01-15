@@ -6,7 +6,7 @@ import WeatherInfo from "../WeatherInfo/WeatherInfo";
 import SearchResults from "../SearchResults/SearchResults";
 import useWeatherApi from "../../api/useWeatherApi";
 function App() {
-  const [location, setLocation] = useState("Orlando");
+  const [location, setLocation] = useState("Orlando, US");
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
   const [query, setQuery] = useState("");
