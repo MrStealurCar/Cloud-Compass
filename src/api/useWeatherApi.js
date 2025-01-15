@@ -6,13 +6,11 @@ function useWeatherApi({
   setWeatherData,
   forecastData,
   setForecastData,
-  setQuery,
   error,
   setError,
   coordinates,
   setCoordinates,
   suggestedCity,
-  setSuggestedCity,
   showSuggestions,
   setShowSuggestions,
 }) {
@@ -89,7 +87,14 @@ function useWeatherApi({
       }
     };
     fetchWeather();
-  }, [location, coordinates, setError, setForecastData, setWeatherData]);
+  }, [
+    location,
+    coordinates,
+    setError,
+    setForecastData,
+    setWeatherData,
+    weatherData,
+  ]);
   const filterForecastData = (forecastList) => {
     const dailyTemps = {};
 
