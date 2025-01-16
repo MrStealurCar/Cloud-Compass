@@ -84,31 +84,53 @@ function useWeatherApi({
         setForecastData([]);
       }
     };
+    const filterForecastData = (forecastList) => {
+      const dailyTemps = {};
+
+      forecastList.forEach((forecast) => {
+        const date = new Date(forecast.dt * 1000).toDateString();
+
+        if (!dailyTemps[date]) {
+          dailyTemps[date] = { temps: [], icon: forecast.weather[0].icon };
+        }
+        dailyTemps[date].temps.push(forecast.main.temp_max);
+      });
+
+      const nextThreeDays = Object.entries(dailyTemps)
+        .slice(1, 4)
+        .map(([date, data]) => ({
+          date,
+          icon: data.icon,
+          temp: Math.max(...data.temps),
+        }));
+
+      return nextThreeDays;
+    };
 
     fetchWeather();
   }, [coordinates]);
-  const filterForecastData = (forecastList) => {
-    const dailyTemps = {};
+  // const filterForecastData = (forecastList) => {
+  //   const dailyTemps = {};
 
-    forecastList.forEach((forecast) => {
-      const date = new Date(forecast.dt * 1000).toDateString();
+  //   forecastList.forEach((forecast) => {
+  //     const date = new Date(forecast.dt * 1000).toDateString();
 
-      if (!dailyTemps[date]) {
-        dailyTemps[date] = { temps: [], icon: forecast.weather[0].icon };
-      }
-      dailyTemps[date].temps.push(forecast.main.temp_max);
-    });
+  //     if (!dailyTemps[date]) {
+  //       dailyTemps[date] = { temps: [], icon: forecast.weather[0].icon };
+  //     }
+  //     dailyTemps[date].temps.push(forecast.main.temp_max);
+  //   });
 
-    const nextThreeDays = Object.entries(dailyTemps)
-      .slice(1, 4)
-      .map(([date, data]) => ({
-        date,
-        icon: data.icon,
-        temp: Math.max(...data.temps),
-      }));
+  //   const nextThreeDays = Object.entries(dailyTemps)
+  //     .slice(1, 4)
+  //     .map(([date, data]) => ({
+  //       date,
+  //       icon: data.icon,
+  //       temp: Math.max(...data.temps),
+  //     }));
 
-    return nextThreeDays;
-  };
+  //   return nextThreeDays;
+  // };
 
   return {
     coordinates,
