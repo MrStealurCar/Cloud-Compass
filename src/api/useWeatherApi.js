@@ -25,6 +25,7 @@ function useWeatherApi({
         const coordinateData = await coordinateResponse.json();
         if (coordinateData.length > 0) {
           const { lat, lon } = coordinateData[0];
+          if (!lat || !lon) return;
           setCoordinates({ lat, lon }); // Set the coordinates
           setShowSuggestions(false);
         } else {
@@ -41,18 +42,10 @@ function useWeatherApi({
     };
 
     fetchCoordinates();
-  }, [
-    location,
-    setCoordinates,
-    setError,
-    setForecastData,
-    setShowSuggestions,
-    setWeatherData,
-  ]);
+  }, [location]);
 
   useEffect(() => {
     if (!location) return;
-    const { lat, lon } = coordinates;
 
     const fetchWeather = async () => {
       setError("");
@@ -60,7 +53,7 @@ function useWeatherApi({
       try {
         // Fetch current weather
         const weatherResponse = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=imperial`
+          `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${API_KEY}&units=imperial`
         );
         const weatherData = await weatherResponse.json();
         if (weatherData.cod === 404) {
@@ -73,28 +66,27 @@ function useWeatherApi({
 
         // Fetch forecast data
         const forecastResponse = await fetch(
-          `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=imperial`
+          `https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${API_KEY}&units=imperial`
         );
         const forecastData = await forecastResponse.json();
-
+        if (forecastData.cod === 404) {
+          setError("Forecast data not found, please enter a different city");
+          setWeatherData(null);
+          setForecastData([]);
+          return;
+        }
         const filteredForecast = filterForecastData(forecastData.list);
         setForecastData(filteredForecast);
       } catch (error) {
         console.error("Error fetching weather data:", error);
-        setError("Error retrieving weather data.");
+        setError("Error retrieving forecast data.");
         setWeatherData(null);
         setForecastData([]);
       }
     };
+
     fetchWeather();
-  }, [
-    location,
-    coordinates,
-    setError,
-    setForecastData,
-    setWeatherData,
-    weatherData,
-  ]);
+  }, [coordinates]);
   const filterForecastData = (forecastList) => {
     const dailyTemps = {};
 
