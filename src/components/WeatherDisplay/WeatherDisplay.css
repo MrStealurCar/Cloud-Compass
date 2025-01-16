@@ -12,7 +12,7 @@
 }
 
 .location {
-  font-size: 50px;
+  font-size: 45px;
 }
 
 .description {
@@ -39,6 +39,12 @@
 
 @media screen and (max-width: 750px) {
   .weather-display {
-    width: 30%;
+    width: 35%;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .weather-display {
+    width: 36%;
   }
 }
