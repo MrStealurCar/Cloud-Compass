@@ -86,7 +86,7 @@ function useWeatherApi({
     };
 
     fetchWeather();
-  }, [coordinates, location]);
+  }, [coordinates]);
   const filterForecastData = (forecastList) => {
     const dailyTemps = {};
 
