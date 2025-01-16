@@ -32,13 +32,13 @@ This was a project that was part of the Front End Engineer career path on Codeca
 
 5. Run `npm start` to start the development server.
 
-## Important note when searching cities
-
-When using the search bar, please specify the country code (e.g., "Orlando, US") to ensure you receive accurate data. Some cities may share the same name across different countries, and including the country code helps avoid confusion and provides the correct weather information.
-
 ## Deployed at
 
 This app was deployed using Netlify at: `https://cloud-compass.netlify.app`
+
+## Important note when searching cities
+
+When searching for cities, please specify the country code (e.x., "Orlando, US") to ensure you receive accurate data. Some cities may share the same name across different countries, and including the country code helps avoid confusion and provides the correct weather information.
 
 ## Contributors
 
