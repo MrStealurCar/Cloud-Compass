@@ -27,14 +27,16 @@ function useWeatherApi({
           const { lat, lon } = coordinateData[0];
           if (!lat || !lon) return;
           setCoordinates({ lat, lon }); // Set the coordinates
+          console.log(`New coordinates set: ${lat}, ${lon}`);
           setShowSuggestions(false);
         } else {
+          console.log("Invalid coordinates");
           setError("City not found, please enter a different city");
+          setCoordinates(null);
           setWeatherData(null);
           setForecastData([]);
         }
       } catch (error) {
-        console.error("Error fetching coordinates:", error);
         setWeatherData(null);
         setForecastData([]);
       }
