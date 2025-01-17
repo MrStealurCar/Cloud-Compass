@@ -35,7 +35,6 @@ function useWeatherApi({
         }
       } catch (error) {
         console.error("Error fetching coordinates:", error);
-        setError("Error retrieving location data.");
         setWeatherData(null);
         setForecastData([]);
       }
@@ -57,7 +56,7 @@ function useWeatherApi({
         );
         const weatherData = await weatherResponse.json();
         if (weatherData.cod === 404) {
-          setError("City not found, please enter a different city");
+          setCoordinates(null);
           setWeatherData(null);
           setForecastData([]);
           return;
@@ -70,7 +69,7 @@ function useWeatherApi({
         );
         const forecastData = await forecastResponse.json();
         if (forecastData.cod === 404) {
-          setError("Forecast data not found, please enter a different city");
+          setCoordinates(null);
           setWeatherData(null);
           setForecastData([]);
           return;
@@ -78,8 +77,7 @@ function useWeatherApi({
         const filteredForecast = filterForecastData(forecastData.list);
         setForecastData(filteredForecast);
       } catch (error) {
-        console.error("Error fetching weather data:", error);
-        setError("Error retrieving forecast data.");
+        setCoordinates(null);
         setWeatherData(null);
         setForecastData([]);
       }
@@ -88,7 +86,7 @@ function useWeatherApi({
       const dailyTemps = {};
 
       forecastList.forEach((forecast) => {
-        const date = new Date(forecast.dt * 1000).toDateString();
+        const date = new Date(forecast.dt * 1000).toDateString(); // For each forecast in the forecastList, convert timestamp (dt) to a JavaScript Date object and format it as a date string.
 
         if (!dailyTemps[date]) {
           dailyTemps[date] = { temps: [], icon: forecast.weather[0].icon };
@@ -103,8 +101,12 @@ function useWeatherApi({
           icon: data.icon,
           temp: Math.max(...data.temps),
         }));
-
-      return nextThreeDays;
+      if (coordinates.lat && coordinates.lon) {
+        return nextThreeDays;
+      } else {
+        setCoordinates(null);
+        setForecastData([]);
+      }
     };
 
     fetchWeather();
