@@ -106,6 +106,7 @@ function useWeatherApi({
       if (coordinates.lat && coordinates.lon) {
         return nextThreeDays;
       } else {
+        setError("City not found, please enter a different city");
         setCoordinates(null);
         setForecastData([]);
       }
