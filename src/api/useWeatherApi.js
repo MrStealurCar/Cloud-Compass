@@ -15,71 +15,31 @@ function useWeatherApi({
   setShowSuggestions,
 }) {
   useEffect(() => {
-    if (!location) return;
-
+    if (!location) setError("Please enter a city.");
     const fetchCoordinates = async () => {
       try {
         const coordinateResponse = await fetch(
           `https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${API_KEY}`
         );
         const coordinateData = await coordinateResponse.json();
-
-        if (coordinateData.length === 0) {
+        if (coordinateData.length > 0) {
+          const { lat, lon } = coordinateData[0];
+          if (!lat || !lon) return;
+          setCoordinates({ lat, lon }); // Set the coordinates
+          console.log(`New coordinates set: ${lat}, ${lon}`);
+          setShowSuggestions(false);
+        } else {
           console.log("Invalid coordinates");
           setError("City not found, please enter a different city");
           setCoordinates(null);
           setWeatherData(null);
           setForecastData([]);
-          return;
         }
-
-        const { lat, lon } = coordinateData[0];
-        if (!lat || !lon) {
-          console.log("Missing lat/lon in coordinates");
-          setError("Invalid location data received.");
-          setCoordinates(null);
-          setWeatherData(null);
-          setForecastData([]);
-          return;
-        }
-
-        setCoordinates({ lat, lon });
-        console.log(`New coordinates set: ${lat}, ${lon}`);
-        setShowSuggestions(false);
       } catch (error) {
-        console.error("Error fetching coordinates:", error);
-        setError("An error occurred while fetching the coordinates.");
-        setCoordinates(null);
         setWeatherData(null);
         setForecastData([]);
       }
     };
-
-    // Original code below
-    // const fetchCoordinates = async () => {
-    //   try {
-    //     const coordinateResponse = await fetch(
-    //       `https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${API_KEY}`
-    //     );
-    //     const coordinateData = await coordinateResponse.json();
-    //     if (coordinateData.length > 0) {
-    //       const { lat, lon } = coordinateData[0];
-    //       if (!lat || !lon) return;
-    //       setCoordinates({ lat, lon }); // Set the coordinates
-    //       console.log(`New coordinates set: ${lat}, ${lon}`);
-    //       setShowSuggestions(false);
-    //     } else {
-    //       console.log("Invalid coordinates");
-    //       setError("City not found, please enter a different city");
-    //       setCoordinates(null);
-    //       setWeatherData(null);
-    //       setForecastData([]);
-    //     }
-    //   } catch (error) {
-    //     setWeatherData(null);
-    //     setForecastData([]);
-    //   }
-    // };
 
     fetchCoordinates();
   }, [location]);
