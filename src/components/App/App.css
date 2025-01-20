@@ -33,3 +33,15 @@
   display: flex;
   justify-content: center;
 }
+
+@media screen and (max-width: 450px) {
+  .error-message {
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .error-message {
+    font-size: 15px;
+  }
+}
