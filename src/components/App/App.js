@@ -37,6 +37,7 @@ function App() {
     setLocation(`${city.name}, ${city.country}`);
     setShowSuggestions(false);
   };
+
   const handleInputChange = async (e) => {
     const API_KEY = process.env.REACT_APP_API_KEY;
     const input = e.target.value;
@@ -64,6 +65,7 @@ function App() {
       setShowSuggestions(false);
     }
   };
+
   return (
     <div className="App">
       <header className="App-header"></header>
@@ -72,7 +74,11 @@ function App() {
           <SearchBar
             query={query}
             handleInputChange={handleInputChange}
-            handleSearch={() => setLocation(query)}
+            handleSearch={() =>
+              query.length === 0
+                ? setError("Please enter a city name")
+                : setLocation(query)
+            }
           />
           <SearchResults
             suggestions={suggestedCity}
