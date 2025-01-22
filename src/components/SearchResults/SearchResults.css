@@ -1,18 +1,24 @@
 .search-results {
-  display: flex;
   background-color: white;
   border: 1px solid #ddd;
   width: 50%;
-  max-height: 150px;
+  max-height: 120px;
   overflow-y: auto;
   margin-top: 5px;
 }
 
 .city {
+  text-decoration: underline;
   font-size: 18px;
   cursor: pointer;
 }
 
 .search-results p:hover {
   background-color: #f0f0f0;
+}
+
+@media screen and (max-width: 500px) {
+  .search-results {
+    margin-right: 125px;
+  }
 }
