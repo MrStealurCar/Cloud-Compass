@@ -4,7 +4,6 @@
   padding: 5px;
   gap: 10px;
   width: 40%;
-  margin-bottom: 10px;
 }
 
 .info {
@@ -20,8 +19,15 @@
     gap: 10px;
   }
 }
-@media screen and (max-width: 400px) {
-  .weather-info {
-    flex-direction: column;
+@media screen and (max-width: 365px) {
+  .info {
+    padding: 3px;
+  }
+}
+
+@media screen and (max-width: 365px) {
+  .info {
+    padding: 0px;
+    font-size: 15px;
   }
 }
