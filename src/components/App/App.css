@@ -27,9 +27,21 @@ main {
   justify-content: center;
 }
 
+@media screen and (min-width: 1026px) {
+  main {
+    height: 130vh;
+  }
+}
+
 @media screen and (max-width: 1025px) {
   main {
     height: 130vh;
+  }
+}
+
+@media screen and (max-width: 830px) {
+  main {
+    height: 120vh;
   }
 }
 
