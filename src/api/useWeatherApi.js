@@ -30,7 +30,6 @@ function useWeatherApi({
           setShowSuggestions(false);
         } else {
           console.error("Invalid coordinates");
-          setError("City not found, please enter a different city");
           setCoordinates(null);
           setWeatherData(null);
           setForecastData([]);
@@ -55,8 +54,6 @@ function useWeatherApi({
     if (!location) return;
 
     const fetchWeather = async () => {
-      setError("");
-
       try {
         // Fetch current weather
         const weatherResponse = await fetch(
@@ -68,8 +65,10 @@ function useWeatherApi({
           setWeatherData(null);
           setForecastData([]);
           return;
+        } else if (weatherData.cod === 200) {
+          setError("");
+          setWeatherData(weatherData);
         }
-        setWeatherData(weatherData);
 
         // Fetch forecast data
         const forecastResponse = await fetch(
@@ -82,38 +81,42 @@ function useWeatherApi({
           setForecastData([]);
           return;
         }
+
+        const filterForecastData = (forecastList) => {
+          const dailyTemps = {};
+
+          forecastList.forEach((forecast) => {
+            const date = new Date(forecast.dt * 1000).toDateString(); // For each forecast in the forecastList, convert timestamp (dt) to a JavaScript Date object and format it as a date string.
+
+            if (!dailyTemps[date]) {
+              dailyTemps[date] = { temps: [], icon: forecast.weather[0].icon };
+            }
+            dailyTemps[date].temps.push(forecast.main.temp_max);
+          });
+
+          const nextThreeDays = Object.entries(dailyTemps)
+            .slice(1, 4)
+            .map(([date, data]) => ({
+              date,
+              icon: data.icon,
+              temp: Math.max(...data.temps),
+            }));
+          if (coordinates.lat && coordinates.lon) {
+            return nextThreeDays;
+          } else {
+            setCoordinates(null);
+            setForecastData([]);
+          }
+        };
+
         const filteredForecast = filterForecastData(forecastData.list);
-        setForecastData(filteredForecast);
+        if (filteredForecast) {
+          setForecastData(filteredForecast);
+        }
       } catch (error) {
+        setError("City not found, please enter a different city.");
         setCoordinates(null);
         setWeatherData(null);
-        setForecastData([]);
-      }
-    };
-    const filterForecastData = (forecastList) => {
-      const dailyTemps = {};
-
-      forecastList.forEach((forecast) => {
-        const date = new Date(forecast.dt * 1000).toDateString(); // For each forecast in the forecastList, convert timestamp (dt) to a JavaScript Date object and format it as a date string.
-
-        if (!dailyTemps[date]) {
-          dailyTemps[date] = { temps: [], icon: forecast.weather[0].icon };
-        }
-        dailyTemps[date].temps.push(forecast.main.temp_max);
-      });
-
-      const nextThreeDays = Object.entries(dailyTemps)
-        .slice(1, 4)
-        .map(([date, data]) => ({
-          date,
-          icon: data.icon,
-          temp: Math.max(...data.temps),
-        }));
-      if (coordinates.lat && coordinates.lon) {
-        return nextThreeDays;
-      } else {
-        setError("City not found, please enter a different city");
-        setCoordinates(null);
         setForecastData([]);
       }
     };
