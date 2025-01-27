@@ -4,6 +4,7 @@ const API_KEY = process.env.REACT_APP_API_KEY;
 
 function useWeatherApi({
   location,
+  setLocation,
   setWeatherData,
   setForecastData,
   setError,
@@ -12,6 +13,10 @@ function useWeatherApi({
   setShowSuggestions,
 }) {
   useEffect(() => {
+    // Reset state when location changes
+    setWeatherData(null);
+    setForecastData(null);
+
     if (!location) {
       setError("City not found, please enter a valid location.");
       return;
@@ -25,10 +30,8 @@ function useWeatherApi({
         const data = await response.json();
 
         if (!data || data.length === 0) {
-          setError("City not found. Please enter a different city.");
+          setError("City not found. Please try again.");
           setCoordinates(null);
-          setWeatherData(null);
-          setForecastData(null);
           return;
         }
 
@@ -45,13 +48,18 @@ function useWeatherApi({
         console.error("Error fetching coordinates:", error);
         setError("Failed to fetch location data. Please try again.");
         setCoordinates(null);
-        setWeatherData(null);
-        setForecastData(null);
       }
     };
 
     fetchCoordinates();
-  }, [location]);
+  }, [
+    location,
+    setError,
+    setCoordinates,
+    setWeatherData,
+    setForecastData,
+    setShowSuggestions,
+  ]);
 
   useEffect(() => {
     if (!coordinates || !coordinates.lat || !coordinates.lon) return;
@@ -111,7 +119,7 @@ function useWeatherApi({
     };
 
     fetchWeather();
-  }, [coordinates]);
+  }, [coordinates, setError, setWeatherData, setForecastData]);
 }
 
 export default useWeatherApi;
