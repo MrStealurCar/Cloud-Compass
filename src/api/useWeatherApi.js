@@ -1,57 +1,60 @@
 import { useEffect } from "react";
+
 const API_KEY = process.env.REACT_APP_API_KEY;
+
 function useWeatherApi({
   location,
-  weatherData,
   setWeatherData,
-  forecastData,
   setForecastData,
-  error,
   setError,
   coordinates,
   setCoordinates,
-  suggestedCity,
-  showSuggestions,
   setShowSuggestions,
 }) {
   useEffect(() => {
-    if (!location) setError("Please enter a city.");
+    if (!location) {
+      setError("City not found, please enter a valid location.");
+      return;
+    }
+
     const fetchCoordinates = async () => {
       try {
-        const coordinateResponse = await fetch(
+        const response = await fetch(
           `https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${API_KEY}`
         );
-        const coordinateData = await coordinateResponse.json();
-        if (coordinateData.length > 0) {
-          const { lat, lon } = coordinateData[0];
-          if (!lat || !lon) return;
-          setCoordinates({ lat, lon }); // Set the coordinates
-          console.log(`New coordinates set: ${lat}, ${lon}`);
-          setShowSuggestions(false);
-        } else {
-          console.error("Invalid coordinates");
+        const data = await response.json();
+
+        if (!data || data.length === 0) {
+          setError("City not found. Please enter a different city.");
           setCoordinates(null);
           setWeatherData(null);
-          setForecastData([]);
+          setForecastData(null);
+          return;
+        }
+
+        const { lat, lon } = data[0];
+        if (lat && lon) {
+          setCoordinates({ lat, lon });
+          setError("");
+          setShowSuggestions(false);
+        } else {
+          setError("Invalid coordinates received.");
+          setCoordinates(null);
         }
       } catch (error) {
+        console.error("Error fetching coordinates:", error);
+        setError("Failed to fetch location data. Please try again.");
+        setCoordinates(null);
         setWeatherData(null);
-        setForecastData([]);
+        setForecastData(null);
       }
     };
 
     fetchCoordinates();
-  }, [
-    location,
-    setCoordinates,
-    setError,
-    setForecastData,
-    setShowSuggestions,
-    setWeatherData,
-  ]);
+  }, [location]);
 
   useEffect(() => {
-    if (!location) return;
+    if (!coordinates || !coordinates.lat || !coordinates.lon) return;
 
     const fetchWeather = async () => {
       try {
@@ -60,85 +63,55 @@ function useWeatherApi({
           `https://api.openweathermap.org/data/2.5/weather?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${API_KEY}&units=imperial`
         );
         const weatherData = await weatherResponse.json();
-        if (weatherData.cod === 404) {
-          setCoordinates(null);
-          setWeatherData(null);
-          setForecastData([]);
-          return;
-        } else if (weatherData.cod === 200) {
-          setError("");
+
+        if (weatherData.cod === 200) {
           setWeatherData(weatherData);
+          setError("");
+        } else {
+          throw new Error("Weather data not found.");
         }
 
-        // Fetch forecast data
+        // Fetch forecast
         const forecastResponse = await fetch(
           `https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${API_KEY}&units=imperial`
         );
         const forecastData = await forecastResponse.json();
-        if (forecastData.cod === 404) {
-          setCoordinates(null);
-          setWeatherData(null);
-          setForecastData([]);
-          return;
-        }
 
-        const filterForecastData = (forecastList) => {
-          const dailyTemps = {};
-
-          forecastList.forEach((forecast) => {
-            const date = new Date(forecast.dt * 1000).toDateString(); // For each forecast in the forecastList, convert timestamp (dt) to a JavaScript Date object and format it as a date string.
-
-            if (!dailyTemps[date]) {
-              dailyTemps[date] = { temps: [], icon: forecast.weather[0].icon };
+        if (forecastData.cod === "200") {
+          const filteredForecast = forecastData.list.reduce((acc, item) => {
+            const date = new Date(item.dt * 1000).toDateString();
+            if (!acc[date]) {
+              acc[date] = {
+                temps: [],
+                icon: item.weather[0].icon,
+              };
             }
-            dailyTemps[date].temps.push(forecast.main.temp_max);
-          });
+            acc[date].temps.push(item.main.temp_max);
+            return acc;
+          }, {});
 
-          const nextThreeDays = Object.entries(dailyTemps)
-            .slice(1, 4)
+          const nextThreeDays = Object.entries(filteredForecast)
+            .slice(1, 4) // Skip today, take the next 3 days
             .map(([date, data]) => ({
               date,
-              icon: data.icon,
               temp: Math.max(...data.temps),
+              icon: data.icon,
             }));
-          if (coordinates.lat && coordinates.lon) {
-            return nextThreeDays;
-          } else {
-            setCoordinates(null);
-            setForecastData([]);
-          }
-        };
 
-        const filteredForecast = filterForecastData(forecastData.list);
-        if (filteredForecast) {
-          setForecastData(filteredForecast);
+          setForecastData(nextThreeDays);
+        } else {
+          throw new Error("Forecast data not found.");
         }
       } catch (error) {
-        setError("City not found, please enter a different city.");
-        setCoordinates(null);
+        console.error("Error fetching weather/forecast data:", error);
+        setError("Failed to fetch weather data. Please try again.");
         setWeatherData(null);
-        setForecastData([]);
+        setForecastData(null);
       }
     };
 
     fetchWeather();
-  }, [
-    coordinates,
-    location,
-    setCoordinates,
-    setError,
-    setForecastData,
-    setWeatherData,
-  ]);
-
-  return {
-    coordinates,
-    weatherData,
-    forecastData,
-    error,
-    suggestedCity,
-    showSuggestions,
-  };
+  }, [coordinates]);
 }
 
 export default useWeatherApi;
