@@ -30,7 +30,7 @@ function useWeatherApi({
         const data = await response.json();
 
         if (!data || data.length === 0) {
-          setError("City not found. Please try again.");
+          setError("City not found. Please enter a different city.");
           setCoordinates(null);
           return;
         }
