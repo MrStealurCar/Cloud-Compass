@@ -4,7 +4,6 @@ const API_KEY = process.env.REACT_APP_API_KEY;
 
 function useWeatherApi({
   location,
-  setLocation,
   setWeatherData,
   setForecastData,
   setError,
@@ -86,8 +85,10 @@ function useWeatherApi({
         const forecastData = await forecastResponse.json();
 
         if (forecastData.cod === "200") {
+          //reduce method is used to iterate over each item in the list array and create a new object.
           const filteredForecast = forecastData.list.reduce((acc, item) => {
-            const date = new Date(item.dt * 1000).toDateString();
+            const date = new Date(item.dt * 1000).toDateString(); // converts to milliseconds
+            // checks if accumulator already has a property for the current date, if not, initializes an entry for that date.
             if (!acc[date]) {
               acc[date] = {
                 temps: [],
