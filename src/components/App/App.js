@@ -65,7 +65,14 @@ function App() {
       setShowSuggestions(false);
     }
   };
-
+  const handleClear = () => {
+    setLocation("Orlando, US");
+    setCoordinates({
+      lat: 28.5383,
+      lon: -81.3792,
+    });
+    setQuery("");
+  };
   return (
     <div className="App">
       <header className="App-header"></header>
@@ -79,6 +86,7 @@ function App() {
                 ? setError("Please enter a city name")
                 : setLocation(query)
             }
+            handleClear={handleClear}
           />
           <SearchResults
             suggestions={suggestedCity}
