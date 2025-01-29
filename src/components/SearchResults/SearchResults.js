@@ -8,7 +8,7 @@ function SearchResults({ suggestions, onCitySelect, visible }) {
       <ul>
         {suggestions.map((city, index) => (
           <p key={index} onClick={() => onCitySelect(city)} className="city">
-            {city.name}, {city.country}
+            {city.name}, {city.state || city.country}
           </p>
         ))}
       </ul>
