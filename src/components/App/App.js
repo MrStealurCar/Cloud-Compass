@@ -5,8 +5,9 @@ import WeatherDisplay from "../WeatherDisplay/WeatherDisplay";
 import WeatherInfo from "../WeatherInfo/WeatherInfo";
 import SearchResults from "../SearchResults/SearchResults";
 import useWeatherApi from "../../api/useWeatherApi";
+import { stateAbbreviations } from "../../stateAbbreviations";
 function App() {
-  const [location, setLocation] = useState("Orlando, US");
+  const [location, setLocation] = useState("Orlando, FL, US");
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
   const [query, setQuery] = useState("");
@@ -32,9 +33,17 @@ function App() {
   });
 
   const handleCitySelect = (city) => {
-    setQuery(`${city.name}, ${city.country}`);
+    let location = `${city.name}, ${city.country}`;
+
+    if (city.state) {
+      // Look up abbreviation for the state
+      const stateAbbr = stateAbbreviations[city.state] || city.state;
+      location = `${city.name}, ${stateAbbr}, ${city.country}`;
+    }
+
+    setQuery(location);
     setCoordinates({ lat: city.lat, lon: city.lon });
-    setLocation(`${city.name}, ${city.country}`);
+    setLocation(location);
     setShowSuggestions(false);
   };
 
@@ -49,7 +58,6 @@ function App() {
           `https://api.openweathermap.org/geo/1.0/direct?q=${input}&limit=5&appid=${API_KEY}`
         );
         const data = await suggestionResponse.json();
-
         if (data.length > 0) {
           setSuggestedCity(data);
           setShowSuggestions(true);
@@ -66,13 +74,16 @@ function App() {
     }
   };
   const handleClear = () => {
-    setLocation("Orlando, US");
+    setLocation("Orlando, FL, US");
     setCoordinates({
       lat: 28.5383,
       lon: -81.3792,
     });
     setQuery("");
+    setShowSuggestions(false);
+    setError("");
   };
+
   return (
     <div className="App">
       <header className="App-header"></header>
