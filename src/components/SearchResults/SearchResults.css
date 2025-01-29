@@ -9,6 +9,7 @@
 
 .city {
   text-decoration: underline;
+  margin-left: -15px;
   font-size: 18px;
   cursor: pointer;
 }
@@ -19,6 +20,6 @@
 
 @media screen and (max-width: 500px) {
   .search-results {
-    margin-right: 125px;
+    margin-right: 140px;
   }
 }
