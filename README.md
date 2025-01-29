@@ -37,7 +37,7 @@ This app was deployed using Netlify at: https://cloud-compass.netlify.app
 
 ## Important note when searching cities
 
-When searching for cities, please specify the country code (e.x., "Orlando, US") to ensure you receive accurate data. Some cities may share the same name across different countries, and including the country code helps avoid confusion and provides the correct weather information.
+When searching for cities, please specify the state and country code (e.x., "Portland, OR, US") to ensure you receive accurate data. Some cities may share the same name across different countries or states, and including the state abbreviation and country code helps avoid confusion, provides the correct weather information and prevents the app from throwing an error. If the country the city is in doesn't have states, the city name followed by the country code will work fine(e.x., Seoul, KR).
 
 ## Contributors
 
